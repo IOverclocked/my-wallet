@@ -42,20 +42,25 @@ async function GETHandler(req: NextRequest) {
   const from = searchParams.get('from');
   const to = searchParams.get('to');
 
+  const where = {
+    userId: 1
+  };
+
+  if (accountId) Object.assign(where, { accountId: Number(accountId) });
+
+  if (categoryId) Object.assign(where, { categoryId: Number(categoryId) });
+
+  if (from || to) {
+    Object.assign(where, {
+      date: {
+        ...(from && { gte: new Date(from) }),
+        ...(to && { lte: new Date(to) })
+      }
+    });
+  }
+
   const expenses = await prisma.expense.findMany({
-    where: {
-      userId: 1,
-      ...(accountId && { accountId: Number(accountId) }),
-      ...(categoryId && { categoryId: Number(categoryId) }),
-      ...(from || to
-        ? {
-            date: {
-              ...(from && { gte: new Date(from) }),
-              ...(to && { lte: new Date(to) })
-            }
-          }
-        : {})
-    },
+    where,
     orderBy: {
       date: 'desc'
     },
