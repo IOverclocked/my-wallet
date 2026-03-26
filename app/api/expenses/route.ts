@@ -18,7 +18,7 @@ async function POSTHandler(req: NextRequest) {
     data: {
       amount: data.amount,
       description: data.description,
-      date: data.date ? new Date(data.date) : new Date(),
+      date: data.date ?? new Date(),
       accountId: data.accountId,
       categoryId: data.categoryId,
       userId: 1 //TODO: tymczasowo bez auth

@@ -20,6 +20,16 @@ async function PUTHandler(
     return api.clientError(validation.getErrorMessage(parsed));
   }
 
+  const existing = await prisma.expense.findUnique({
+    where: { id: expenseId }
+  });
+
+  if (!existing) return api.clientError('Expense not found', 404);
+
+  const oldAmount = existing.amount;
+  const newAmount = parsed.data.amount;
+  const delta = oldAmount - newAmount;
+
   const updated = await prisma.expense.update({
     where: { id: expenseId },
     data: {
@@ -30,6 +40,11 @@ async function PUTHandler(
       account: true,
       category: true
     }
+  });
+
+  await prisma.account.update({
+    where: { id: existing.accountId },
+    data: { balance: { increment: delta } }
   });
 
   return api.success(updated);
@@ -44,13 +59,18 @@ async function DELETEHandler(
   const { id } = await ctx.params;
   const expenseId = Number(id);
 
-  if (expenseId) return api.clientError('Invalid expense id', 400);
+  if (!expenseId) return api.clientError('Invalid expense id', 400);
 
   const existing = await prisma.expense.findUnique({
     where: { id: expenseId }
   });
 
   if (!existing) return api.clientError('Expense not found', 404);
+
+  await prisma.account.update({
+    where: { id: existing.accountId },
+    data: { balance: { increment: existing.amount } }
+  });
 
   await prisma.expense.delete({
     where: { id: expenseId }
