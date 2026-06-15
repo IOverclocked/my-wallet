@@ -1,0 +1,9 @@
+import { describe, it, expect } from "vitest"
+import { use{{name}}Store } from "./use{{name}}Store"
+
+describe("use{{name}}Store", () => {
+  it("has initial state", () => {
+    const state = use{{name}}Store.getState()
+    expect(state).toBeDefined()
+  })
+})

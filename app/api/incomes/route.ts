@@ -6,7 +6,7 @@ import { NextRequest } from 'next/server';
 async function POSTHandler(req: NextRequest) {
   const body = await req.json();
 
-  const parsed = validation.schema.expense.safeParse(body);
+  const parsed = validation.schema.income.safeParse(body);
 
   if (!parsed.success) {
     return api.clientError(validation.getErrorMessage(parsed), 400);
@@ -14,7 +14,7 @@ async function POSTHandler(req: NextRequest) {
 
   const data = parsed.data;
 
-  const expense = await prisma.expense.create({
+  const income = await prisma.income.create({
     data: {
       amount: data.amount,
       description: data.description,
@@ -29,12 +29,17 @@ async function POSTHandler(req: NextRequest) {
     }
   });
 
-  return api.success(expense, 201);
+  await prisma.account.update({
+    where: { id: income.accountId },
+    data: { balance: { increment: income.amount } }
+  });
+
+  return api.success(income, 201);
 }
 
 export const POST = api.withErrorHandling(POSTHandler);
 
-async function GETHandler(req: NextRequest) {
+export async function GETHandler(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   const accountId = searchParams.get('accountId');
@@ -59,7 +64,7 @@ async function GETHandler(req: NextRequest) {
     });
   }
 
-  const expenses = await prisma.expense.findMany({
+  const incomes = await prisma.income.findMany({
     where,
     orderBy: {
       date: 'desc'
@@ -70,7 +75,7 @@ async function GETHandler(req: NextRequest) {
     }
   });
 
-  return api.success(expenses);
+  return api.success(incomes);
 }
 
 export const GET = api.withErrorHandling(GETHandler);

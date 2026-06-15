@@ -1,0 +1,10 @@
+import { render } from "@testing-library/react"
+import { describe, it, expect } from "vitest"
+import {{name}} from "./{{name}}"
+
+describe("{{name}}", () => {
+  it("renders without errors", () => {
+    const { container } = render(<{{name}} />)
+    expect(container).toBeInTheDocument()
+  })
+})

@@ -40,9 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# panda css
+/styled-system
+
 /app/generated/prisma
 
 /app/generated/prisma
 
 .env
 docker-compose.override.yml
+
+*storybook.log
+storybook-static

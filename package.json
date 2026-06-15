@@ -6,7 +6,31 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md}\"",
+    "prepare": "panda codegen && husky",
+    "test": "vitest",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "plop": "tsx node_modules/plop/bin/plop.js",
+    "commit": "cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-customizable"
+    }
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,mjs,json,md}": "prettier --write"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@prisma/engines",
+      "prisma",
+      "sharp",
+      "unrs-resolver"
+    ]
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.4.1",
@@ -16,16 +40,43 @@
     "prisma": "7.3.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "zod": "4.3.6"
+    "zod": "4.3.6",
+    "zustand": "5.0.14"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "4",
+    "@chromatic-com/storybook": "5.2.1",
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "@pandacss/dev": "1.11.3",
+    "@storybook/addon-a11y": "10.4.2",
+    "@storybook/addon-docs": "10.4.2",
+    "@storybook/addon-mcp": "0.6.0",
+    "@storybook/addon-vitest": "10.4.2",
+    "@storybook/nextjs-vite": "10.4.2",
+    "@storybook/react": "^10.4.4",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
     "@types/node": "20",
     "@types/react": "19",
     "@types/react-dom": "19",
+    "@vitejs/plugin-react": "6.0.2",
+    "@vitest/browser-playwright": "4.1.8",
+    "@vitest/coverage-v8": "4.1.8",
+    "commitizen": "^4.3.2",
+    "cz-customizable": "^7.5.4",
     "eslint": "9",
     "eslint-config-next": "16.1.6",
-    "tailwindcss": "4",
-    "typescript": "5"
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "jsdom": "29.1.1",
+    "lint-staged": "^17.0.7",
+    "playwright": "1.60.0",
+    "plop": "4.0.5",
+    "prettier": "^3.8.4",
+    "storybook": "10.4.2",
+    "tsx": "4.22.4",
+    "typescript": "5",
+    "vite": "8.0.16",
+    "vitest": "4.1.8"
   }
 }
