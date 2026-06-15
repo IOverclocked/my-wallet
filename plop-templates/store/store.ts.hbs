@@ -1,0 +1,16 @@
+import { create } from "zustand"
+import { devtools, persist } from "zustand/middleware"
+import type { {{name}}State, {{name}}Actions } from "./types"
+
+type {{name}}Store = {{name}}State & {{name}}Actions
+
+export const use{{name}}Store = create<{{name}}Store>()(
+  devtools(
+    persist(
+      (_set) => ({
+        // state and actions
+      }),
+      { name: "{{camelCase name}}-store" }
+    )
+  )
+)
