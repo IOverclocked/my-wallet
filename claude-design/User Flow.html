@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>my-wallet · User Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/components.css">
+<style>
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background:
+      radial-gradient(70% 45% at 50% 0%, var(--bg-grad-top), transparent 65%),
+      var(--bg);
+    font-family: var(--font-sans); color: var(--text);
+  }
+  /* hide inner scrollbars inside frames + flow rows for a clean look */
+  #root *::-webkit-scrollbar { height: 6px; width: 0; }
+  #root *::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+
+  .doc-header {
+    position: sticky; top: 0; z-index: var(--z-sticky);
+    background: color-mix(in oklch, var(--bg) 80%, transparent);
+    backdrop-filter: blur(16px) saturate(1.3);
+    border-bottom: 1px solid var(--border);
+  }
+  .doc-header__inner { max-width: 1180px; margin: 0 auto; padding: var(--space-4) var(--space-6); display: flex; align-items: center; gap: var(--space-4); }
+  .doc-header__inner a { color: var(--text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: 600; padding: 8px 12px; border-radius: var(--radius-sm); }
+  .doc-header__inner a:hover { color: var(--text); background: var(--surface-2); }
+</style>
+</head>
+<body>
+<script src="styles/icons.js"></script>
+
+<header class="doc-header">
+  <div class="doc-header__inner">
+    <span class="logo"><span class="logo__mark"></span> my-wallet</span>
+    <nav style="margin-left:auto; display:flex; gap:4px">
+      <a href="Design System.html">Design System</a>
+      <a href="App Prototype.html">Prototyp</a>
+    </nav>
+  </div>
+</header>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="app/data.jsx"></script>
+<script type="text/babel" src="app/ui.jsx"></script>
+<script type="text/babel" src="app/screens.jsx"></script>
+<script type="text/babel" src="app/flow.jsx"></script>
+</body>
+</html>

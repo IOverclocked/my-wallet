@@ -1,7 +1,7 @@
-import { api } from '@/lib/api';
-import { prisma } from '@/lib/prisma';
-import { validation } from '@/lib/validation';
-import { NextRequest } from 'next/server';
+import { api } from "@/lib/api";
+import { prisma } from "@/lib/prisma";
+import { validation } from "@/lib/validation";
+import { NextRequest } from "next/server";
 
 async function POSTHandler(req: NextRequest) {
   const body = await req.json();
@@ -21,12 +21,12 @@ async function POSTHandler(req: NextRequest) {
       date: data.date ?? new Date(),
       accountId: data.accountId,
       categoryId: data.categoryId,
-      userId: 1 //TODO: tymczasowo bez auth
+      userId: 1, //TODO: tymczasowo bez auth
     },
     include: {
       account: true,
-      category: true
-    }
+      category: true,
+    },
   });
 
   return api.success(expense, 201);
@@ -37,13 +37,13 @@ export const POST = api.withErrorHandling(POSTHandler);
 async function GETHandler(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  const accountId = searchParams.get('accountId');
-  const categoryId = searchParams.get('categoryId');
-  const from = searchParams.get('from');
-  const to = searchParams.get('to');
+  const accountId = searchParams.get("accountId");
+  const categoryId = searchParams.get("categoryId");
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
 
   const where = {
-    userId: 1
+    userId: 1,
   };
 
   if (accountId) Object.assign(where, { accountId: Number(accountId) });
@@ -54,20 +54,20 @@ async function GETHandler(req: NextRequest) {
     Object.assign(where, {
       date: {
         ...(from && { gte: new Date(from) }),
-        ...(to && { lte: new Date(to) })
-      }
+        ...(to && { lte: new Date(to) }),
+      },
     });
   }
 
   const expenses = await prisma.expense.findMany({
     where,
     orderBy: {
-      date: 'desc'
+      date: "desc",
     },
     include: {
       account: true,
-      category: true
-    }
+      category: true,
+    },
   });
 
   return api.success(expenses);

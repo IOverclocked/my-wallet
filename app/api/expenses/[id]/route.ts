@@ -1,16 +1,13 @@
-import { api } from '@/lib/api';
-import { prisma } from '@/lib/prisma';
-import { validation } from '@/lib/validation';
-import { NextRequest } from 'next/server';
+import { api } from "@/lib/api";
+import { prisma } from "@/lib/prisma";
+import { validation } from "@/lib/validation";
+import { NextRequest } from "next/server";
 
-async function PUTHandler(
-  req: NextRequest,
-  ctx: { params: Promise<{ id: string }> }
-) {
+async function PUTHandler(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const { id } = await ctx.params;
   const expenseId = Number(id);
 
-  if (!expenseId) return api.clientError('Invalid expense id', 400);
+  if (!expenseId) return api.clientError("Invalid expense id", 400);
 
   const body = await req.json();
 
@@ -21,10 +18,10 @@ async function PUTHandler(
   }
 
   const existing = await prisma.expense.findUnique({
-    where: { id: expenseId }
+    where: { id: expenseId },
   });
 
-  if (!existing) return api.clientError('Expense not found', 404);
+  if (!existing) return api.clientError("Expense not found", 404);
 
   const oldAmount = existing.amount;
   const newAmount = parsed.data.amount;
@@ -34,17 +31,17 @@ async function PUTHandler(
     where: { id: expenseId },
     data: {
       ...parsed.data,
-      date: parsed.data.date ?? new Date()
+      date: parsed.data.date ?? new Date(),
     },
     include: {
       account: true,
-      category: true
-    }
+      category: true,
+    },
   });
 
   await prisma.account.update({
     where: { id: existing.accountId },
-    data: { balance: { increment: delta } }
+    data: { balance: { increment: delta } },
   });
 
   return api.success(updated);
@@ -52,31 +49,28 @@ async function PUTHandler(
 
 export const PUT = api.withErrorHandling(PUTHandler);
 
-async function DELETEHandler(
-  req: NextRequest,
-  ctx: { params: Promise<{ id: string }> }
-) {
+async function DELETEHandler(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const { id } = await ctx.params;
   const expenseId = Number(id);
 
-  if (!expenseId) return api.clientError('Invalid expense id', 400);
+  if (!expenseId) return api.clientError("Invalid expense id", 400);
 
   const existing = await prisma.expense.findUnique({
-    where: { id: expenseId }
+    where: { id: expenseId },
   });
 
-  if (!existing) return api.clientError('Expense not found', 404);
+  if (!existing) return api.clientError("Expense not found", 404);
 
   await prisma.account.update({
     where: { id: existing.accountId },
-    data: { balance: { increment: existing.amount } }
+    data: { balance: { increment: existing.amount } },
   });
 
   await prisma.expense.delete({
-    where: { id: expenseId }
+    where: { id: expenseId },
   });
 
-  return api.success({ message: 'Expense deleted' });
+  return api.success({ message: "Expense deleted" });
 }
 
 export const DELETE = api.withErrorHandling(DELETEHandler);

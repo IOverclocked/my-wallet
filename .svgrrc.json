@@ -1,0 +1,11 @@
+{
+  "typescript": true,
+  "icon": true,
+  "svgProps": {
+    "aria-hidden": "true",
+    "focusable": "false"
+  },
+  "replaceAttrValues": {
+    "currentColor": "currentColor"
+  }
+}

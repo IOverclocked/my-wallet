@@ -1,18 +1,46 @@
-import type { Preview } from "@storybook/nextjs-vite";
+import type { Preview, Decorator } from "@storybook/nextjs-vite";
+import { useEffect } from "react";
+import "../app/globals.css";
+
+const withDesignSystem: Decorator = (Story, context) => {
+  const theme = (context.globals?.theme as string) ?? "dark";
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  return <Story />;
+};
 
 const preview: Preview = {
+  decorators: [withDesignSystem],
+
+  globalTypes: {
+    theme: {
+      name: "Theme",
+      description: "Design system theme",
+      defaultValue: "dark",
+      toolbar: {
+        icon: "circlehollow",
+        items: [
+          { value: "dark", title: "Dark" },
+          { value: "light", title: "Light" },
+        ],
+        showName: true,
+        dynamicTitle: true,
+      },
+    },
+  },
+
   parameters: {
+    backgrounds: { disable: true },
     controls: {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
     },
-
     a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
       test: "todo",
     },
   },

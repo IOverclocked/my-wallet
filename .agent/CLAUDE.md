@@ -7,6 +7,23 @@ Stack: Next.js 16.1.6, App Router, TypeScript, Prisma 7.3, PostgreSQL, Panda CSS
 
 ---
 
+## Code style
+
+> **Global rule:** All code must conform to the project's Prettier config (`.prettierrc`). Never use single quotes, always use double quotes. After writing any file, run `pnpm format` or ensure the output already matches these rules before presenting it.
+
+Key rules from `.prettierrc`:
+
+| Rule            | Value                                                |
+| --------------- | ---------------------------------------------------- |
+| `singleQuote`   | `false` → **double quotes everywhere**               |
+| `trailingComma` | `"all"` → trailing commas in objects, arrays, params |
+| `semi`          | `true` → always semicolons                           |
+| `printWidth`    | `100`                                                |
+| `tabWidth`      | `2`                                                  |
+| `endOfLine`     | `"lf"`                                               |
+
+---
+
 ## Structure
 
 ```
@@ -98,6 +115,8 @@ src/components/common/Button/
 
 ## Plop generators
 
+> **Global rule:** Always use `pnpm plop` to scaffold new components, hooks, stores, and API routes. Never create these files manually. The generator produces the correct file structure, naming, and boilerplate — bypassing it leads to inconsistency.
+
 Available generators (run `pnpm plop`):
 
 | Generator   | Output location                     | What it creates                                                       |
@@ -121,6 +140,31 @@ Run: `pnpm test`
 
 Every component in `src/components/` has a `.stories.tsx` file.  
 Run: `pnpm storybook`
+
+---
+
+## Design system
+
+Source files live in `claude-design/` — **never edit them**.
+
+| File                                  | Purpose                                                                                           |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `claude-design/styles/tokens.css`     | **Single source of truth** for all CSS custom properties (colors, type, spacing, radius, motion). |
+| `claude-design/panda.config.ts`       | Ready-to-use Panda CSS config — mirrors `tokens.css` 1:1. Drop into project root.                 |
+| `claude-design/styles/components.css` | Reference CSS for all components (BEM-ish, maps to Panda recipes).                                |
+| `claude-design/styles/icons.js`       | SVG icon sprite. Usage: `<svg class="ico"><use href="#i-NAME"/></svg>`.                           |
+| `claude-design/Design System.html`    | Full visual documentation — brand, color, type, spacing, icons, components, Panda mapping.        |
+| `claude-design/App Prototype.html`    | Interactive mobile prototype (all screens assembled).                                             |
+| `claude-design/app/`                  | Prototype source (React + Babel): `data`, `ui`, `screens`, `app`.                                 |
+
+### Key rules
+
+- **Theme:** controlled by `data-theme="dark|light"` on `<html>`. Default = dark.
+- **Semantic tokens only:** never use raw palette values (`--c-gold-500`) in components — always use semantic aliases (`--primary`, `--accent`, `bg`, `text`).
+- **Fonts:** `Sora` (display/headings), `Plus Jakarta Sans` (body), `JetBrains Mono` (amounts/numbers — `tnum` feature required).
+- **Color semantics:** Gold = brand. Green = income. Coral = expense. Neon = data viz only. Never decorative.
+- **Amounts:** always sign-led (`+ / −`), monospace face, tabular figures.
+- **Panda recipes:** `button`, `card`, `badge` — class names in component CSS match recipe variant names.
 
 ---
 

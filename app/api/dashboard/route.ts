@@ -1,18 +1,18 @@
-import { Prisma } from '@/app/generated/prisma/client';
-import { api } from '@/lib/api';
-import { prisma } from '@/lib/prisma';
-import { NextRequest } from 'next/server';
+import { Prisma } from "@/app/generated/prisma/client";
+import { api } from "@/lib/api";
+import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
 
 async function GETHandler(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  const accountId = searchParams.get('accountId');
-  const categoryId = searchParams.get('categoryId');
-  const from = searchParams.get('from');
-  const to = searchParams.get('to');
+  const accountId = searchParams.get("accountId");
+  const categoryId = searchParams.get("categoryId");
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
 
   const where = {
-    userId: 1
+    userId: 1,
   };
 
   if (accountId) Object.assign(where, { accountId: Number(accountId) });
@@ -23,8 +23,8 @@ async function GETHandler(req: NextRequest) {
     Object.assign(where, {
       date: {
         ...(from && { gte: new Date(from) }),
-        ...(to && { lte: new Date(to) })
-      }
+        ...(to && { lte: new Date(to) }),
+      },
     });
   }
 
@@ -32,27 +32,27 @@ async function GETHandler(req: NextRequest) {
   const expenseWhere: Prisma.ExpenseWhereInput = where;
   const accountWhere: Prisma.AccountWhereInput = {
     userId: where.userId,
-    ...(accountId && { id: Number(accountId) })
+    ...(accountId && { id: Number(accountId) }),
   };
 
   const incomes = await prisma.income.aggregate({
     where: incomeWhere,
-    _sum: { amount: true }
+    _sum: { amount: true },
   });
 
   const expenses = await prisma.expense.aggregate({
     where: expenseWhere,
-    _sum: { amount: true }
+    _sum: { amount: true },
   });
 
   const accounts = await prisma.account.findMany({
-    where: accountWhere
+    where: accountWhere,
   });
 
   return api.success({
     incomes: incomes._sum.amount ?? 0,
     expenses: expenses._sum.amount ?? 0,
-    accounts: accounts
+    accounts: accounts,
   });
 }
 
